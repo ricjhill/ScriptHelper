@@ -61,47 +61,82 @@ namespace ScriptHelper
 
         }
 
-        private string getOpenAIPassword()
+private string getOpenAIPassword()
+{
+    string path = @"C:\Users\richard.hill\projects\ScriptHelper001D\OOAIauthtoken.txt";
+
+    try
+    {
+        using (StreamReader sr = new StreamReader(path))
         {
-            string path = @"D:\OOAIpwd.txt";
-
-            using (StreamReader sr = new StreamReader(path))
-            {
-                // Read the first line from the file
-                string pwd = sr.ReadLine();
-                return pwd;
-
-            }
+            // Read the first line from the file
+            string pwd = sr.ReadLine();
+            return pwd;
         }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Error reading the file:");
+        Console.WriteLine(ex.Message);
+        return null;
+    }
+}
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            // UtilsGPT module = new UtilsGPT();
-            // module.UpdateError(this);
-        }
 
-        private void Movie_SelectedIndexChanged(object sender, EventArgs e)
+ private void Form1_Load(object sender, EventArgs e)
+{
+    try
+    {
+        // UtilsGPT module = new UtilsGPT();
+        // module.UpdateError(this);
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show($"Failed to initialize the form: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+}
+
+private void Movie_SelectedIndexChanged(object sender, EventArgs e)
+{
+    try
+    {
+        TabControl tabControl = sender as TabControl;
+        if (tabControl != null)
         {
-            TabControl tabControl = sender as TabControl;
-            if (tabControl != null)
+            int selectedIndex = tabControl.SelectedIndex;
+            if (selectedIndex == 1)
             {
-                int selectedIndex = tabControl.SelectedIndex;
-                if (selectedIndex == 1)
+                // Ensure 'scenes' is accessible and has items.
+                if (scenes == null || scenes.Count == 0)
                 {
-
-                    SceneInScenesList.DataSource = scenes;
-                    SceneInScenesList.DisplayMember = "Title";
-                    Application.DoEvents();
-
-                    int picked = SceneInScenesList.SelectedIndex;
-                    SceneHint.Text = scenes[picked].Hint;
-                    Application.DoEvents();
-
+                    MessageBox.Show("Scene list is empty or not set.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-                // Perform your desired actions based on the selected index.
-                // MessageBox.Show($"Selected tab index: {selectedIndex}");
+
+                SceneInScenesList.DataSource = scenes;
+                SceneInScenesList.DisplayMember = "Title";
+                Application.DoEvents();
+
+                // Ensure there is a valid selection.
+                if (SceneInScenesList.SelectedIndex == -1 || SceneInScenesList.SelectedIndex >= scenes.Count)
+                {
+                    MessageBox.Show("No scene selected or out of index.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                int picked = SceneInScenesList.SelectedIndex;
+                SceneHint.Text = scenes[picked].Hint;
+                Application.DoEvents();
             }
+            // You can uncomment the below line to debug selected tab index issues.
+            // MessageBox.Show($"Selected tab index: {selectedIndex}");
         }
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+}
 
         private void Button1_Click(object sender, EventArgs e)
         {
