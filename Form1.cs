@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenAI_API;
-using OpenAI_API.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography.X509Certificates;
 using System.IO;
 
 namespace ScriptHelper
@@ -21,25 +12,25 @@ namespace ScriptHelper
 
     public partial class Form1 : Form
     {
-
-
         public OpenAIAPI api; 
 
         int NotesTextKount = 0;
         List<SceneObj> scenes;
         List<SceneObj> scenesinscenes;
-        SceneObj scene;
+        readonly SceneObj scene;
 
         MovieObj myMovie = new MovieObj();
 
         string gptModel = "gpt-3.5-turbo";
+        //private readonly object scenesinscenes;
 
         // Set up the ListBox
+
 
         public Form1()
         {
             InitializeComponent();
-            api = new OpenAIAPI(getOpenAIPassword());
+            api = new OpenAIAPI();
             SelectGPT35.Checked = true;
 
             // makeProtoTypeScenes();
@@ -63,7 +54,7 @@ namespace ScriptHelper
 
 private string getOpenAIPassword()
 {
-    string path = @"C:\Users\richard.hill\projects\ScriptHelper001D\OOAIauthtoken.txt";
+    string path = @"C:\Users\richard.hill\projects\ScriptHelper001D\OOAcIauthtoken.txt";
 
     try
     {
@@ -240,10 +231,8 @@ private void Movie_SelectedIndexChanged(object sender, EventArgs e)
         private async void button5_Click(object sender, EventArgs e)
         {
 
-            doMakeScenesFromMovieText();
-
-
-
+            //doMakeScenesFromMovieText();
+            await Task.Run(() => doMakeScenesFromMovieText());
 
         }
 
@@ -261,12 +250,7 @@ private void Movie_SelectedIndexChanged(object sender, EventArgs e)
 
         private async void button6_Click(object sender, EventArgs e)
         {
-
-
-            doMakeSceneText();
-
-
-
+            await Task.Run(() => doMakeSceneText());
         }
 
         private async void button7_Click(object sender, EventArgs e)
@@ -291,18 +275,12 @@ private void Movie_SelectedIndexChanged(object sender, EventArgs e)
 
         private async void button5_Click_1(object sender, EventArgs e)
         {
-            doMakeBeatSheet();
-
-
-
+            await Task.Run(() => doMakeBeatSheet());
         }
 
         private async void button5_Click_2(object sender, EventArgs e)
         {
-
-            doWriteSceneScript();
-
-            
+            await Task.Run(() =>doWriteSceneScript());
         }
 
         private void SceneText_TextChanged(object sender, EventArgs e)
@@ -446,7 +424,7 @@ private void Movie_SelectedIndexChanged(object sender, EventArgs e)
                         looper = false;
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
 
                     {
 
