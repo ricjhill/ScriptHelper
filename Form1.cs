@@ -52,26 +52,7 @@ namespace ScriptHelper
 
         }
 
-private string getOpenAIPassword()
-{
-    string path = @"C:\Users\richard.hill\projects\ScriptHelper001D\OOAcIauthtoken.txt";
 
-    try
-    {
-        using (StreamReader sr = new StreamReader(path))
-        {
-            // Read the first line from the file
-            string pwd = sr.ReadLine();
-            return pwd;
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("Error reading the file:");
-        Console.WriteLine(ex.Message);
-        return null;
-    }
-}
 
 
  private void Form1_Load(object sender, EventArgs e)
