@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenAI_API;
-using OpenAI_API.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System.Text.RegularExpressions;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography.X509Certificates;
 using System.IO;
 
 namespace ScriptHelper
@@ -21,25 +12,25 @@ namespace ScriptHelper
 
     public partial class Form1 : Form
     {
-
-
         public OpenAIAPI api; 
 
         int NotesTextKount = 0;
         List<SceneObj> scenes;
         List<SceneObj> scenesinscenes;
-        SceneObj scene;
+        readonly SceneObj scene;
 
         MovieObj myMovie = new MovieObj();
 
         string gptModel = "gpt-3.5-turbo";
+        //private readonly object scenesinscenes;
 
         // Set up the ListBox
+
 
         public Form1()
         {
             InitializeComponent();
-            api = new OpenAIAPI(getOpenAIPassword());
+            api = new OpenAIAPI();
             SelectGPT35.Checked = true;
 
             // makeProtoTypeScenes();
@@ -61,47 +52,63 @@ namespace ScriptHelper
 
         }
 
-        private string getOpenAIPassword()
-        {
-            string path = @"D:\OOAIpwd.txt";
 
-            using (StreamReader sr = new StreamReader(path))
+
+
+ private void Form1_Load(object sender, EventArgs e)
+{
+    try
+    {
+        // UtilsGPT module = new UtilsGPT();
+        // module.UpdateError(this);
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show($"Failed to initialize the form: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+}
+
+private void Movie_SelectedIndexChanged(object sender, EventArgs e)
+{
+    try
+    {
+        TabControl tabControl = sender as TabControl;
+        if (tabControl != null)
+        {
+            int selectedIndex = tabControl.SelectedIndex;
+            if (selectedIndex == 1)
             {
-                // Read the first line from the file
-                string pwd = sr.ReadLine();
-                return pwd;
-
-            }
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            // UtilsGPT module = new UtilsGPT();
-            // module.UpdateError(this);
-        }
-
-        private void Movie_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            TabControl tabControl = sender as TabControl;
-            if (tabControl != null)
-            {
-                int selectedIndex = tabControl.SelectedIndex;
-                if (selectedIndex == 1)
+                // Ensure 'scenes' is accessible and has items.
+                if (scenes == null || scenes.Count == 0)
                 {
-
-                    SceneInScenesList.DataSource = scenes;
-                    SceneInScenesList.DisplayMember = "Title";
-                    Application.DoEvents();
-
-                    int picked = SceneInScenesList.SelectedIndex;
-                    SceneHint.Text = scenes[picked].Hint;
-                    Application.DoEvents();
-
+                    MessageBox.Show("Scene list is empty or not set.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
                 }
-                // Perform your desired actions based on the selected index.
-                // MessageBox.Show($"Selected tab index: {selectedIndex}");
+
+                SceneInScenesList.DataSource = scenes;
+                SceneInScenesList.DisplayMember = "Title";
+                Application.DoEvents();
+
+                // Ensure there is a valid selection.
+                if (SceneInScenesList.SelectedIndex == -1 || SceneInScenesList.SelectedIndex >= scenes.Count)
+                {
+                    MessageBox.Show("No scene selected or out of index.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                int picked = SceneInScenesList.SelectedIndex;
+                SceneHint.Text = scenes[picked].Hint;
+                Application.DoEvents();
             }
+            // You can uncomment the below line to debug selected tab index issues.
+            // MessageBox.Show($"Selected tab index: {selectedIndex}");
         }
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
+}
 
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -205,10 +212,8 @@ namespace ScriptHelper
         private async void button5_Click(object sender, EventArgs e)
         {
 
-            doMakeScenesFromMovieText();
-
-
-
+            //doMakeScenesFromMovieText();
+            await Task.Run(() => doMakeScenesFromMovieText());
 
         }
 
@@ -226,12 +231,7 @@ namespace ScriptHelper
 
         private async void button6_Click(object sender, EventArgs e)
         {
-
-
-            doMakeSceneText();
-
-
-
+            await Task.Run(() => doMakeSceneText());
         }
 
         private async void button7_Click(object sender, EventArgs e)
@@ -256,18 +256,12 @@ namespace ScriptHelper
 
         private async void button5_Click_1(object sender, EventArgs e)
         {
-            doMakeBeatSheet();
-
-
-
+            await Task.Run(() => doMakeBeatSheet());
         }
 
         private async void button5_Click_2(object sender, EventArgs e)
         {
-
-            doWriteSceneScript();
-
-            
+            await Task.Run(() =>doWriteSceneScript());
         }
 
         private void SceneText_TextChanged(object sender, EventArgs e)
@@ -411,7 +405,7 @@ namespace ScriptHelper
                         looper = false;
                     }
 
-                    catch (Exception ex)
+                    catch (Exception)
 
                     {
 
