@@ -8,24 +8,22 @@ Install
 
 ## Steps
 1. **Download C# and DotNet dependencies**
-  - https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-8.0.204-windows-x64-installer
-  - https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net481-developer-pack-offline-installer
-  - https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit
+    - https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-8.0.204-windows-x64-installer
+    - https://dotnet.microsoft.com/en-us/download/dotnet-framework/thank-you/net481-developer-pack-offline-installer
+    - https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit
 
 2. **Set up and fund an OpenAPI account**
-  - https://platform.openai.com/docs/overview
+    - https://platform.openai.com/docs/overview
 
 3. **Create an API key**
-  - https://platform.openai.com/api-keys
+    - https://platform.openai.com/api-keys
 
 4. **Set up authentication**
-  - Create a file called ./openai in the project root dir and paste the key there.
-  - https://github.com/OkGoDoIt/OpenAI-API-dotnet?tab=readme-ov-file#authentication
-  account
-  - sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX   API key
-	 
+    - Create a file called ./openai in the project root dir and paste the key there.
+    - https://github.com/OkGoDoIt/OpenAI-API-dotnet?tab=readme-ov-file#authentication
+  	 
 ## Useful links
-- https://rogerpincombe.com/openai-dotnet-api
+    - https://rogerpincombe.com/openai-dotnet-api
 
 ## Important Note about C# OpenAI-API-dotnet Library
 For long running processes (pretty much anything running in GPT-4 mode), the NuGet version 1.7.2 of the library 
